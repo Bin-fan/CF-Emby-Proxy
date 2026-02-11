@@ -95,12 +95,14 @@ npx wrangler deploy
 ✨ Successfully published your Worker to
   https://your-worker-name.your-subdomain.workers.dev
 ```
+
 2. 设置你的 Emby 服务器地址：
 
 ```
 添加密钥型环境变量 STUNPORT = STUN 穿透端口
 添加密钥型环境变量 DOMAIN = 域名举例 https://emby.123456.xyz
 ```
+
 ### 第七步：配置自定义域名（可选）
 
 如果需要使用自定义域名：
