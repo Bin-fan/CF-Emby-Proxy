@@ -33,12 +33,27 @@ npm install -g wrangler
 ```
 
 ### 第二步：登录 Cloudflare
+1.本地登录：
 
 ```bash
 wrangler login
 ```
 
 执行后会打开浏览器进行授权登录。
+
+2.远程登录：
+
+```bash
+wrangler login --browser false
+```
+
+复制地址到本地浏览器完成授权，复制返回的地址 ```返回地址```
+
+打开一个新的SSH窗口：
+
+```bash
+curl '返回地址'
+```
 
 ### 第三步：克隆或下载本项目
 
@@ -80,11 +95,11 @@ npx wrangler deploy
 ✨ Successfully published your Worker to
   https://your-worker-name.your-subdomain.workers.dev
 ```
-2. **修改 `worker.js`**，设置你的 Emby 服务器地址：
+2. 设置你的 Emby 服务器地址：
 
-```javascript
+```
 添加密钥型环境变量 STUNPORT = STUN 穿透端口
-添加密钥型环境变量 DOMAIN = 域名
+添加密钥型环境变量 DOMAIN = 域名举例 https://emby.123456.xyz
 ```
 ### 第七步：配置自定义域名（可选）
 
@@ -99,7 +114,7 @@ npx wrangler deploy
 
 Lucky STUN 端口自动更新脚本：
 
-```
+```bash
 #!/bin/sh
 
 # ---------------- 配置区域 ----------------
