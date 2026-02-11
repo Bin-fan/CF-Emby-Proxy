@@ -1,15 +1,15 @@
 import { Hono } from 'hono'
 
 const CONFIG = {
-  UPSTREAM_URL: 'https://your-emby-server.com', // Replace with your Emby server URL
+  UPSTREAM_URL: `${env.DOMAIN}:${env.STUNPORT}`, // 录入环境变量
   
   // [关键修复] 
   // 1. 匹配带后缀的文件
   // 2. 匹配 Emby 特有的无后缀图片路径 (/Images/Primary, /Images/Backdrop 等)
-  STATIC_REGEX: /(\.(jpg|jpeg|png|gif|css|js|ico|svg|webp|woff|woff2)|(\/Images\/(Primary|Backdrop|Logo|Thumb|Banner|Art)))/i,
+  STATIC_REGEX: /$^/i,
   
   // 视频流 (直连，不缓存，不重试)
-  VIDEO_REGEX: /(\/Videos\/|\/Items\/.*\/Download|\/Items\/.*\/Stream)/i,
+  VIDEO_REGEX: /(\/Videos\/|\/Items\/.*\/Download|\/Items\/.*\/Stream|(\.(jpg|jpeg|png|gif|css|js|ico|svg|webp|woff|woff2))|(\/Images\/(Primary|Backdrop|Logo|Thumb|Banner|Art)))/i,
   
   // [新增] 慢接口微缓存 (解决 Resume 1.5s 的问题)
   // 缓存 API 响应 5-10秒，大幅提升"返回/进入"页面的流畅度，同时不影响数据准确性
