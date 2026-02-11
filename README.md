@@ -95,6 +95,56 @@ npx wrangler deploy
 3. 点击你的 Worker -> 设置 -> 触发器 -> 添加自定义域名
 4. 输入域名（如 `emby.yourdomain.com`）
 
+### 第八步：配置端口自动更新（可选）
+
+Lucky STUN 端口自动更新脚本：
+
+```
+#!/bin/sh
+
+# ---------------- 配置区域 ----------------
+CF_ACCOUNT_ID="你的_Cloudflare_Account_ID"
+CF_API_TOKEN="你的_API_Token"
+WORKER_NAME="你的_Worker_名字"
+
+# Lucky 动态替换端口 (确保 Lucky 侧设置正确)
+# 如果 Lucky 是通过传参方式 ($1) 给入端口，请用: NEW_PORT="$1"
+# 如果 Lucky 是通过文本替换 ${port}，请保持下面这行:
+NEW_PORT="${port}"
+# ----------------------------------------
+
+# 检查端口是否为空，防止错误清空
+if [ -z "$NEW_PORT" ]; then
+    echo "Error: NEW_PORT is empty"
+    exit 1
+fi
+
+echo "Preparing to update STUNPORT to: $NEW_PORT"
+
+# 构造 JSON 数据 (避免复杂的嵌套引号)
+JSON_PAYLOAD="{\"name\":\"STUNPORT\",\"text\":\"$NEW_PORT\",\"type\":\"secret_text\"}"
+
+# 发送请求
+# -s: 静默模式，不显示进度条
+# -w: 显示 HTTP 状态码
+RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$WORKER_NAME/secrets" \
+     -H "Authorization: Bearer $CF_API_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d "$JSON_PAYLOAD")
+
+# 提取 HTTP 状态码 (最后一行)
+HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+    echo "Success: Updated STUNPORT to $NEW_PORT"
+else
+    echo "Failed! HTTP Code: $HTTP_CODE"
+    echo "Response: $BODY"
+    exit 1
+fi
+```
+
 ## 配置说明
 
 编辑 `worker.js` 中的 `CONFIG` 对象来自定义配置：
