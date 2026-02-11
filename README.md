@@ -14,9 +14,8 @@
 
 | 请求类型 | 策略 | 缓存时间 |
 |---------|------|---------|
-| 静态资源（图片/CSS/JS） | Cloudflare 缓存 | 1 年 |
 | API 接口（Resume/用户数据） | 微缓存 | 10 秒 |
-| 视频流 | 直连透传 | 不缓存 |
+| 静态资源（图片/CSS/JS） 视频流 | 直连透传 | 不缓存 |
 | WebSocket | 直连透传 | 不缓存 |
 
 ## 部署教程
@@ -44,7 +43,7 @@ wrangler login
 ### 第三步：克隆或下载本项目
 
 ```bash
-git clone https://github.com/cnm-microsoft/CF-Emby-Proxy.git
+git clone https://github.com/Bin-fan/CF-Emby-Proxy.git
 cd CF-Emby-Proxy
 ```
 
@@ -67,16 +66,9 @@ npm install
 }
 ```
 
-2. **修改 `worker.js`**，设置你的 Emby 服务器地址：
-
-```javascript
-const CONFIG = {
-  UPSTREAM_URL: 'https://your-emby-server.com', // 替换为你的 Emby 服务器地址
-  // ... 其他配置
-}
-```
-
 ### 第六步：部署到 Cloudflare
+
+1. 部署 ：
 
 ```bash
 npx wrangler deploy
@@ -88,7 +80,12 @@ npx wrangler deploy
 ✨ Successfully published your Worker to
   https://your-worker-name.your-subdomain.workers.dev
 ```
+2. **修改 `worker.js`**，设置你的 Emby 服务器地址：
 
+```javascript
+添加密钥型环境变量 STUNPORT = STUN 穿透端口
+添加密钥型环境变量 DOMAIN = 域名
+```
 ### 第七步：配置自定义域名（可选）
 
 如果需要使用自定义域名：
